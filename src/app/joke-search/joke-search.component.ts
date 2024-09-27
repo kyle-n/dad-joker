@@ -8,7 +8,7 @@ import {
 import { DadJokeService } from '../dad-joke.service';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, filter, Subject, switchMap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 
 @Component({
   selector: 'app-joke-search',
@@ -22,13 +22,9 @@ export class JokeSearchComponent {
   protected query = model('');
   protected jokes = signal<string[]>([]);
 
-  private readonly queryValue = new Subject<string>();
-
   constructor(dadJokeService: DadJokeService) {
-    effect(() => {
-      this.queryValue.next(this.query());
-    });
-    this.queryValue.pipe(
+    const queryValue = toObservable(this.query)
+    queryValue.pipe(
         takeUntilDestroyed(),
         filter((query) => query.length > 2),
         debounceTime(2 * 1000),
