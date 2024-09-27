@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
 import { Joke, JokeSearchResponse } from './types';
-import { map } from 'rxjs';
+import { debounceTime, filter, map, Observable, switchMap } from 'rxjs';
+import { toObservable, toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,18 @@ export class DadJokeService {
     }).pipe(
       map(response => response.results)
     )
+  }
+
+  debouncedSearchResults(query: Signal<string>): Signal<Joke[] | undefined> {
+    const queryValue: Observable<string> = toObservable(query);
+    return toSignal(
+      queryValue.pipe(
+        takeUntilDestroyed(),
+        filter((query) => query.length > 2),
+        debounceTime(2 * 1000),
+        switchMap((query) => this.search(query))
+      )
+    );
   }
 
 }

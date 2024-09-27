@@ -28,17 +28,9 @@ export class JokeSearchComponent {
   protected jokes: Signal<string[]>;
 
   constructor(dadJokeService: DadJokeService) {
-    const queryValue: Observable<string> = toObservable(this.query);
-    const searchResults = toSignal(
-      queryValue.pipe(
-        takeUntilDestroyed(),
-        filter((query) => query.length > 2),
-        debounceTime(2 * 1000),
-        switchMap((query) => dadJokeService.search(query))
-      )
-    );
+    const debouncedSearchResults = dadJokeService.debouncedSearchResults(this.query);
     this.jokes = computed(() => {
-      const results = searchResults() ?? [];
+      const results = debouncedSearchResults() ?? [];
       return results.map((result) => result.joke);
     });
   }
