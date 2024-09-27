@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DadJokeService } from './dad-joke.service';
 import { JsonPipe } from '@angular/common';
+import { JokeSearchComponent } from './joke-search/joke-search.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, JsonPipe],
+  imports: [RouterOutlet, JsonPipe, JokeSearchComponent],
   providers: [DadJokeService],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
