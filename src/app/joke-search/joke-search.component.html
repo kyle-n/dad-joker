@@ -1,1 +1,5 @@
-<p>joke-search works!</p>
+<input #searchBox type="text" [(ngModel)]="query" />
+
+@for (joke of jokes(); track joke) {
+  <p>{{ joke }}</p>
+}

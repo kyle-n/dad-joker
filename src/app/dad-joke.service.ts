@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Joke } from './types';
-import { Observable } from 'rxjs';
+import { Joke, JokeSearchResponse } from './types';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,18 @@ export class DadJokeService {
         Accept: 'application/json'
       }
     });
+  }
+
+  search(query: string) {
+    const url = new URL('https://icanhazdadjoke.com/search');
+    url.searchParams.append('term', query);
+    return this.httpClient.get<JokeSearchResponse>(url.toString(), {
+      headers: {
+        Accept: 'application/json'
+      }
+    }).pipe(
+      map(response => response.results)
+    )
   }
 
 }
