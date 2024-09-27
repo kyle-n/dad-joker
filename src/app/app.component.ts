@@ -18,7 +18,7 @@ export class AppComponent {
 
   constructor(readonly dadJokeService: DadJokeService) {}
 
-  protected incrementCount() {
+  protected loadNewJoke() {
     this.dadJokeService.getRandomJoke().subscribe((response) => {
       this.joke.set(response.joke);
     });
