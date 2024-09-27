@@ -2,18 +2,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   model,
   Signal,
-  signal,
 } from '@angular/core';
 import { DadJokeService } from '../dad-joke.service';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, filter, Observable, switchMap } from 'rxjs';
-import {
-  takeUntilDestroyed,
-  toObservable,
-  toSignal,
-} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-joke-search',
@@ -27,8 +21,8 @@ export class JokeSearchComponent {
   protected query = model('');
   protected jokes: Signal<string[]>;
 
-  constructor(dadJokeService: DadJokeService) {
-    const debouncedSearchResults = dadJokeService.debouncedSearchResults(this.query);
+  constructor(dadJokeService: DadJokeService, destroyRef: DestroyRef) {
+    const debouncedSearchResults = dadJokeService.debouncedSearchResults(this.query, destroyRef);
     this.jokes = computed(() => {
       const results = debouncedSearchResults() ?? [];
       return results.map((result) => result.joke);

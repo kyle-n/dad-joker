@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Signal } from '@angular/core';
+import { DestroyRef, Injectable, Signal } from '@angular/core';
 import { Joke, JokeSearchResponse } from './types';
 import { debounceTime, filter, map, Observable, switchMap } from 'rxjs';
 import { toObservable, toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -30,11 +30,11 @@ export class DadJokeService {
     )
   }
 
-  debouncedSearchResults(query: Signal<string>): Signal<Joke[] | undefined> {
+  debouncedSearchResults(query: Signal<string>, destroyRef: DestroyRef): Signal<Joke[] | undefined> {
     const queryValue: Observable<string> = toObservable(query);
     return toSignal(
       queryValue.pipe(
-        takeUntilDestroyed(),
+        takeUntilDestroyed(destroyRef),
         filter((query) => query.length > 2),
         debounceTime(2 * 1000),
         switchMap((query) => this.search(query))
