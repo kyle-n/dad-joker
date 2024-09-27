@@ -1,13 +1,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   model,
+  Signal,
   signal,
 } from '@angular/core';
 import { DadJokeService } from '../dad-joke.service';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, filter, Observable, switchMap } from 'rxjs';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
+import {
+  takeUntilDestroyed,
+  toObservable,
+  toSignal,
+} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-joke-search',
@@ -19,17 +25,21 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 })
 export class JokeSearchComponent {
   protected query = model('');
-  protected jokes = signal<string[]>([]);
+  protected jokes: Signal<string[]>;
 
   constructor(dadJokeService: DadJokeService) {
-    const queryValue: Observable<string> = toObservable(this.query)
-    queryValue.pipe(
+    const queryValue: Observable<string> = toObservable(this.query);
+    const searchResults = toSignal(
+      queryValue.pipe(
         takeUntilDestroyed(),
         filter((query) => query.length > 2),
         debounceTime(2 * 1000),
         switchMap((query) => dadJokeService.search(query))
-      ).subscribe((response) => {
-        this.jokes.set(response.map((jokeData) => jokeData.joke));
-      })
+      )
+    );
+    this.jokes = computed(() => {
+      const results = searchResults() ?? [];
+      return results.map((result) => result.joke);
+    });
   }
 }
