@@ -1,13 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   model,
   signal,
 } from '@angular/core';
 import { DadJokeService } from '../dad-joke.service';
 import { FormsModule } from '@angular/forms';
-import { debounceTime, filter, Subject, switchMap } from 'rxjs';
+import { debounceTime, filter, Observable, switchMap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
 
 @Component({
@@ -23,7 +22,7 @@ export class JokeSearchComponent {
   protected jokes = signal<string[]>([]);
 
   constructor(dadJokeService: DadJokeService) {
-    const queryValue = toObservable(this.query)
+    const queryValue: Observable<string> = toObservable(this.query)
     queryValue.pipe(
         takeUntilDestroyed(),
         filter((query) => query.length > 2),
