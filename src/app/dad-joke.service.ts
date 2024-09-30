@@ -2,10 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { DestroyRef, Injectable, Signal } from '@angular/core';
 import { Joke, JokeSearchResponse } from './types';
 import { debounceTime, filter, map, Observable, switchMap } from 'rxjs';
-import { toObservable, toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  toObservable,
+  toSignal,
+  takeUntilDestroyed,
+} from '@angular/core/rxjs-interop';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DadJokeService {
   constructor(private readonly httpClient: HttpClient) {}
@@ -13,24 +17,27 @@ export class DadJokeService {
   getRandomJoke() {
     return this.httpClient.get<Joke>('https://icanhazdadjoke.com/', {
       headers: {
-        Accept: 'application/json'
-      }
+        Accept: 'application/json',
+      },
     });
   }
 
   search(query: string) {
     const url = new URL('https://icanhazdadjoke.com/search');
     url.searchParams.append('term', query);
-    return this.httpClient.get<JokeSearchResponse>(url.toString(), {
-      headers: {
-        Accept: 'application/json'
-      }
-    }).pipe(
-      map(response => response.results)
-    )
+    return this.httpClient
+      .get<JokeSearchResponse>(url.toString(), {
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+      .pipe(map((response) => response.results));
   }
 
-  debouncedSearchResults(query: Signal<string>, destroyRef: DestroyRef): Signal<Joke[] | undefined> {
+  debouncedSearchResults(
+    query: Signal<string>,
+    destroyRef: DestroyRef
+  ): Signal<Joke[] | undefined> {
     const queryValue: Observable<string> = toObservable(query);
     return toSignal(
       queryValue.pipe(
@@ -41,5 +48,4 @@ export class DadJokeService {
       )
     );
   }
-
 }

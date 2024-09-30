@@ -22,7 +22,10 @@ export class JokeSearchComponent {
   protected jokes: Signal<string[]>;
 
   constructor(dadJokeService: DadJokeService, destroyRef: DestroyRef) {
-    const debouncedSearchResults = dadJokeService.debouncedSearchResults(this.query, destroyRef);
+    const debouncedSearchResults = dadJokeService.debouncedSearchResults(
+      this.query,
+      destroyRef
+    );
     this.jokes = computed(() => {
       const results = debouncedSearchResults() ?? [];
       return results.map((result) => result.joke);

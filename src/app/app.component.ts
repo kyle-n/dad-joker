@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { DadJokeService } from './dad-joke.service';
 import { JsonPipe } from '@angular/common';
@@ -23,7 +23,7 @@ export class AppComponent {
     const joke$ = this.loadNewJokeButtonClicked$.pipe(
       switchMap(() => dadJokeService.getRandomJoke()),
       map((response) => response.joke)
-    )
-    this.joke = toSignal(joke$, {initialValue: ''});
+    );
+    this.joke = toSignal(joke$, { initialValue: '' });
   }
 }
