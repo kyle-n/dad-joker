@@ -1,4 +1,7 @@
-<input #searchBox type="text" [(ngModel)]="query" />
+<div>
+  <label for="joke-search">Search for a joke:</label>
+  <input #searchBox type="text" [(ngModel)]="query" id="joke-search" />
+</div>
 
 @for (joke of jokes(); track joke) {
   <p>{{ joke }}</p>
