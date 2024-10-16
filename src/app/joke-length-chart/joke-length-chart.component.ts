@@ -5,6 +5,7 @@ import {
   input,
   viewChild,
 } from '@angular/core';
+import {Chart, ChartConfiguration} from 'chart.js'
 
 @Component({
   selector: 'app-joke-length-chart',
@@ -19,4 +20,23 @@ export class JokeLengthChartComponent {
 
   private jokeLengthCanvas =
     viewChild.required<ElementRef<HTMLCanvasElement>>('jokeLengthCanvas');
+
+  private chartConfig: ChartConfiguration = {
+    type: 'bar',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: 'Joke Length',
+        data: [],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  }
 }
