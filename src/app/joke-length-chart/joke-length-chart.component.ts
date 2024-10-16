@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
   input,
   viewChild,
 } from '@angular/core';
-import {Chart, ChartConfiguration} from 'chart.js'
+import 'chart.js/auto'
+import { Chart, ChartConfiguration } from 'chart.js';
 
 @Component({
   selector: 'app-joke-length-chart',
