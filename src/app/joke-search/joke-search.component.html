@@ -6,3 +6,7 @@
 @for (joke of jokes(); track joke) {
   <p>{{ joke }}</p>
 }
+
+@if (jokes().length > 0) {
+  <app-joke-length-chart [jokes]="jokes()"></app-joke-length-chart>
+}

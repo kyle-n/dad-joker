@@ -9,11 +9,12 @@ import {
 import { DadJokeService } from '../dad-joke.service';
 import { FormsModule } from '@angular/forms';
 import { Joke } from '../types';
+import { JokeLengthChartComponent } from '../joke-length-chart/joke-length-chart.component';
 
 @Component({
   selector: 'app-joke-search',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, JokeLengthChartComponent],
   templateUrl: './joke-search.component.html',
   styleUrl: './joke-search.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
