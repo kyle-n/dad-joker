@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { DadJokeService } from '../dad-joke.service';
 import { FormsModule } from '@angular/forms';
+import { Joke } from '../types';
 
 @Component({
   selector: 'app-joke-search',
@@ -22,10 +23,8 @@ export class JokeSearchComponent {
   protected jokes: Signal<string[]>;
 
   constructor(dadJokeService: DadJokeService, destroyRef: DestroyRef) {
-    const debouncedSearchResults = dadJokeService.debouncedSearchResults(
-      this.query,
-      destroyRef
-    );
+    const debouncedSearchResults: Signal<Joke[] | undefined> =
+      dadJokeService.debouncedSearchResults(this.query, destroyRef);
     this.jokes = computed(() => {
       const results = debouncedSearchResults() ?? [];
       return results.map((result) => result.joke);
